@@ -7,14 +7,17 @@ drivers <- tuesdata$drivers
 View(records)
 View(drivers)
 
-fastest_times <- records %>% group_by(track) %>% 
-  slice(which.max(time))
+fastest_times <- records %>% group_by(track, type) %>% 
+  slice(which.min(time))
 
 luigi_times <- records %>% filter(track == "Luigi Raceway")
-luigi_times <- luigi_times[0:50,]
+luigi_times <- luigi_times[0:50,c(4,8)]
 luigi_times_only <- luigi_times$time
-time_jump <- for (n in luigi_times_only) {
-  (n - n+1)
+empty_list = 1
+
+for(i in 1:50)
+{
+  print(luigi_times_only[i] - luigi_times_only[i+1])
 }
 
 luigi_times_only[1] - luigi_times_only[2]
