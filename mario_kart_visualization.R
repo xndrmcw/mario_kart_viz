@@ -11,11 +11,27 @@ fastest_times <- records %>% group_by(track, type) %>%
   slice(which.min(time))
 
 luigi_times <- records %>% filter(track == "Luigi Raceway")
-luigi_times <- luigi_times[0:50,c(4,8)]
+
+for(i in 1:147)
+{
+if(records$type[i] == "Three Lap" & records$shortcut[i] == "No"){
+  records$dummy[i] = 1
+} else if
+  (records$type[i] == "Single Lap" & records$shortcut[i] == "No"){
+  records$dummy[i] = 2
+} else if
+  (records$type[i] == "Three Lap" & records$shortcut[i] == "Yes"){
+    records$dummy[i] = 3
+  } else {
+  records$dummy[i] = 4
+  }
+}
+
+luigi_times <- luigi_times[0:147,c(4,8)]
 luigi_times_only <- luigi_times$time
 empty_list = 1
 
-for(i in 1:50)
+for(i in 1:147)
 {
   print(luigi_times_only[i] - luigi_times_only[i+1])
 }
