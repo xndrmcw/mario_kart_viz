@@ -1,3 +1,5 @@
+# ---- DATA FROM TIDY TUESDAY! AVAIL HERE: https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-05-25/readme.md
+
 library(tidyverse)
 library(tidytuesdayR)
 tuesdata <- tidytuesdayR::tt_load('2021-05-25')
@@ -7,33 +9,55 @@ drivers <- tuesdata$drivers
 View(records)
 View(drivers)
 
+
+# ---- dataframe of the fastest times on each course! 
+# ---- filtered by track and type - fastest time for each course and type
 fastest_times <- records %>% group_by(track, type) %>% 
   slice(which.min(time))
 
-luigi_times <- records %>% filter(track == "Luigi Raceway")
 
-for(i in 1:147)
+# ---- filter out all courses but luigis for testing's sake, initialize
+# ---- dummy variable
+luigi_times <- records %>% filter(track == "Luigi Raceway")
+records$dummy = 0
+
+
+# ---- run thru the dataframe and assign dummies according to criteria
+for(i in 1:nrow(luigi_times))
 {
-if(records$type[i] == "Three Lap" & records$shortcut[i] == "No"){
-  records$dummy[i] = 1
+if(luigi_times$type[i] == "Three Lap" & luigi_times$shortcut[i] == "No"){
+  luigi_times$dummy[i] = 1
 } else if
-  (records$type[i] == "Single Lap" & records$shortcut[i] == "No"){
-  records$dummy[i] = 2
+  (luigi_times$type[i] == "Single Lap" & luigi_times$shortcut[i] == "No"){
+    luigi_times$dummy[i] = 2
 } else if
-  (records$type[i] == "Three Lap" & records$shortcut[i] == "Yes"){
-    records$dummy[i] = 3
+  (luigi_times$type[i] == "Three Lap" & luigi_times$shortcut[i] == "Yes"){
+    luigi_times$dummy[i] = 3
   } else {
-  records$dummy[i] = 4
+    luigi_times$dummy[i] = 4
   }
 }
 
-luigi_times <- luigi_times[0:147,c(4,8)]
-luigi_times_only <- luigi_times$time
-empty_list = 1
 
-for(i in 1:147)
+# ---- run a loop that creates a column with time differences between runs
+
+for(i in 1:nrow(luigi_times))
 {
-  print(luigi_times_only[i] - luigi_times_only[i+1])
+  if
+    (i == 1 | i == nrow(luigi_times)){
+      luigi_times$time_diff[i] <-luigi_times$time[i]
+    }
+  else if
+    (luigi_times$dummy[i] != luigi_times$dummy[i-1]){
+      luigi_times$time_diff[i] <- paste(luigi_times$time[i],", START")
+    }
+  else if
+    (luigi_times$dummy[i] != luigi_times$dummy[i+1]){
+      luigi_times$time_diff[i] <- paste((luigi_times$time[i]),", FIN")
+    }
+  else {
+    luigi_times$time_diff[i] <- luigi_times$time[i] - luigi_times$time[i+1]
+  }
 }
 
-luigi_times_only[1] - luigi_times_only[2]
+luigi_times$time_diff <- lapply(luigi_times$time_diff, round, 5)
