@@ -1,6 +1,8 @@
 # mario_kart_viz
 Mario Kart 64 world records visualization!
 
+![mario kart cover image](https://github.com/xndrmcw/mario_kart_viz/blob/main/cover_photo.jpg)
+
 cover image by @juanjimver 
 https://www.instagram.com/juanjimver/
 
