@@ -93,7 +93,7 @@ for(i in 1:nrow(luigi_times))
 
 luigi_times$time_diff <- luigi_times$time_diff * -1
 
-
+# ---- THEME PULLED FROM @EMILMALTA on twitter! i hope it's not impolite to use other people's themes. 
 theme_update(
   plot.title.position = "plot",
   plot.title = element_text(size = 48),
